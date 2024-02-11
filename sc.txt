@@ -1,0 +1,73 @@
+Service catalog 
+
+ Prerequisites 
+
+Install maven = https://www.digitalocean.com/community/tutorials/install-maven-linux-ubuntu 
+
+Install nginx(8090) front end= https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04 
+
+Install mysql = https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04  
+
+ 
+
+MySQL setup 
+
+Create user and database in MySQL and give all permissions to user 
+
+Sudo MySQL 
+
+CREATE USER 'username'@'host' IDENTIFIED WITH authentication_plugin BY 'password'; 
+
+CREATE USER 'sammy'@'localhost' IDENTIFIED BY 'password'; 
+
+GRANT PRIVILEGE ON database.table TO 'username'@'host'; 
+
+GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'sammy'@'localhost' WITH GRANT OPTION; 
+
+GRANT ALL PRIVILEGES ON *.* TO 'sammy'@'localhost' WITH GRANT OPTION; 
+
+FLUSH PRIVILEGES; 
+
+exit 
+
+mysql -u sammy –p 
+
+Creating database service_catalogue_db 
+
+Create database service_catalogue_db; 
+
+Show databases; 
+
+To allow access of application used by others make binding- address as 0.0.0.0 = /etc/mysq//mysql.conf.d/mysqld.conf 
+
+ 
+
+ Nginx setup 
+
+Give user name passwd and database name in application.properties= /src/main/resources/application.properties 
+
+Add index.html in the path of nginx = /var/www/html 
+
+Add front end index.html file path and reverse proxy to backend tomcat in the path nginx= /etc/nginx/sites-available/default 
+
+           Listen port 8090 
+
+           Root /var/www/html/service-catalogue-ui-1.0.0/build; 
+
+           Reverse proxxy: 
+
+           Location /api/ { 
+
+               Proxy_pass http://localhost:8091/; 
+
+           } 
+
+ 
+
+Running the application 
+
+Build using  mvn clean install –DskipTest  
+
+You will get a jar file  
+
+Run that jar file = java –jar <name of file> 
